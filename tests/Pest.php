@@ -12,11 +12,11 @@ use Symfony\Component\Uid\Ulid;
 
 uses()->beforeAll(fn () => resetDatabase())->in(__DIR__);
 
-function app(bool $reInstanciate = false): KernelInterface
+function app(): KernelInterface
 {
     static $kernel;
 
-    if (null === $kernel || $reInstanciate) {
+    return $kernel ??= (function () {
         $testCase = new class () extends KernelTestCase {
             public function __construct()
             {
@@ -30,20 +30,20 @@ function app(bool $reInstanciate = false): KernelInterface
                 return self::$kernel;
             }
         };
-        $kernel = $testCase->getKernel();
-    }
 
-    return $kernel;
+        return $testCase->getKernel();
+    })();
 }
 
 function container(): ContainerInterface
 {
-    return app()->getContainer()->get('test.service_container', ContainerInterface::NULL_ON_INVALID_REFERENCE);
+    return app()->getContainer()->get('test.service_container');
 }
 
 function api(): ApiClient
 {
     static $api;
+
     return $api ??= new ApiClient(container()->get('test.api_platform.client'));
 }
 

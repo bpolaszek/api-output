@@ -5,14 +5,10 @@ declare(strict_types=1);
 namespace App\Tests;
 
 use ApiPlatform\Symfony\Bundle\Test\Client;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 use function array_replace;
-use function explode;
 use function is_string;
-use function sprintf;
 
 final class ApiClient
 {

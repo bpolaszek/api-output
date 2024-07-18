@@ -2,11 +2,9 @@
 
 namespace App\Entity;
 
-class BookOutput
+final class BookOutput
 {
-    public ?int $id = null;
-
+    public int $id;
     public string $name;
-
     public string $type = 'output';
 }
