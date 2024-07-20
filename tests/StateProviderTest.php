@@ -2,11 +2,18 @@
 
 namespace App\Tests;
 
+use function expect;
+
 it('creates a book', function () {
-    $book = api()->post('/api/books', ['name' => 'PHP for dummies'])->toArray();
+    $params = [
+        'author' => 'Rasmus Lerdorf',
+        'name' => 'PHP for dummies'
+    ];
+    $book = api()->post('/api/books', $params)->toArray();
     dump(['POST /api/books' => $book]);
 
     expect($book['name'])->toBe('PHP for dummies') // <-- OK
+    ->and($book['author'])->toBe('Rasmus Lerdorf') // <-- OK
     ->and($book['id'])->toBe(1) // <-- OK
     ->and($book['@type'])->toBe('Book') // <-- OK
     ->and($book['@id'])->toBe('/api/books/1') // <-- OK
@@ -20,18 +27,19 @@ it('lists books', function () {
     $book = $books['hydra:member'][0];
 
     expect($book['name'])->toBe('PHP for dummies') // <-- OK
+    ->and($book['author'])->toBe('Rasmus Lerdorf') // <-- OK
     ->and($book['id'])->toBe(1) // <-- OK
     ->and($book['type'])->toBe('output') // <-- OK
     ->and($book['@type'])->toBe('Book') // OK
     ->and($book['@id'])->toBe('/api/books/1'); // OK
 });
 
-
 it('gets a book', function () {
     $book = api()->get('/api/books/1')->toArray();
     dump(['GET /api/books/1' => $book]);
 
     expect($book['name'])->toBe('PHP for dummies') // <-- OK
+    ->and($book['author'])->toBe('Rasmus Lerdorf') // <-- OK
     ->and($book['id'])->toBe(1) // <-- OK
     ->and($book['@id'])->toBe('/api/books/1') // <-- OK
     ->and($book['@type'])->toBe('Book') // <-- OK
@@ -50,6 +58,7 @@ it('updates a book', function () {
     dump(['PUT /api/books/1' => $book]);
 
     expect($book['name'])->toBe('The Easy PHP') // <-- OK
+    ->and($book['author'])->toBe('Rasmus Lerdorf') // <-- OK
     ->and($book['id'])->toBe(1) // <-- OK
     ->and($book['@id'])->toBe('/api/books/1') // <-- OK
     ->and($book['@type'])->toBe('Book') // <-- OK

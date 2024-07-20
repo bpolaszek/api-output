@@ -13,6 +13,9 @@ class Book
     public ?int $id = null;
 
     #[ORM\Column]
+    public string $author;
+
+    #[ORM\Column]
     public string $name;
 
     public string $type = 'entity';
