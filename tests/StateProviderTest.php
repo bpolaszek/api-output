@@ -9,8 +9,8 @@ it('creates a book', function () {
     expect($book['name'])->toBe('PHP for dummies') // <-- OK
     ->and($book['id'])->toBe(1) // <-- OK
     ->and($book['@type'])->toBe('Book') // <-- OK
-    ->and($book['@id'])->toBe('/api/books/1') // <-- Failed, got '/api/.well-known/genid/somerandomidentifier'
-    ->and($book['type'])->toBe('output'); // <-- Failed, got 'entity'
+    ->and($book['@id'])->toBe('/api/books/1') // <-- OK
+    ->and($book['type'])->toBe('output'); // <-- OK
 });
 
 it('lists books', function () {
@@ -36,4 +36,29 @@ it('gets a book', function () {
     ->and($book['@id'])->toBe('/api/books/1') // <-- OK
     ->and($book['@type'])->toBe('Book') // <-- OK
     ->and($book['type'])->toBe('output'); // <-- OK
+});
+
+it('handles 404s', function () {
+    $response = api()->get('/api/books/2');
+    dump(['GET /api/books/2' => $response->getStatusCode()]);
+
+    expect($response->getStatusCode())->toBe(404); // <-- OK
+});
+
+it('updates a book', function () {
+    $book = api()->put('/api/books/1', ['name' => 'The Easy PHP'])->toArray();
+    dump(['PUT /api/books/1' => $book]);
+
+    expect($book['name'])->toBe('The Easy PHP') // <-- OK
+    ->and($book['id'])->toBe(1) // <-- OK
+    ->and($book['@id'])->toBe('/api/books/1') // <-- OK
+    ->and($book['@type'])->toBe('Book') // <-- OK
+    ->and($book['type'])->toBe('output'); // <-- OK
+});
+
+it('deletes a book', function () {
+    $content = api()->delete('/api/books/1')->getContent();
+    dump(['DELETE /api/books/1' => $content]);
+
+    expect($content)->toBeEmpty(); // <-- OK
 });

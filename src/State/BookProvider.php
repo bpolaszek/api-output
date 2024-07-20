@@ -27,7 +27,7 @@ final readonly class BookProvider implements ProviderInterface
     {
     }
 
-    public function provide(Operation $operation, array $uriVariables = [], array $context = []): ArrayPaginator|BookOutput
+    public function provide(Operation $operation, array $uriVariables = [], array $context = []): ArrayPaginator|BookOutput|null
     {
         return match ($operation instanceof CollectionOperationInterface) {
             true => $this->provideCollection($operation, $uriVariables, $context),
@@ -46,13 +46,16 @@ final readonly class BookProvider implements ProviderInterface
         );
     }
 
-    private function provideItem(Operation $operation, array $uriVariables = [], array $context = []): BookOutput
+    private function provideItem(Operation $operation, array $uriVariables = [], array $context = []): ?BookOutput
     {
         return $this->transformItem($this->itemProvider->provide($operation, $uriVariables, $context));
     }
 
-    private function transformItem(Book $entity): BookOutput
+    public function transformItem(?Book $entity): ?BookOutput
     {
+        if (null === $entity) {
+            return null;
+        }
         $output = new BookOutput();
         $output->id = $entity->id;
         $output->name = $entity->name;
