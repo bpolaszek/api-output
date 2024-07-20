@@ -4,20 +4,19 @@ namespace App\Entity;
 
 use ApiPlatform\Doctrine\Orm\State\Options;
 use ApiPlatform\Metadata\ApiResource;
-use App\State\BookProcessor;
-use App\State\BookProvider;
+use App\State\BookResourceManager;
 
 #[ApiResource(
     shortName: 'Book',
-    input: Book::class,
-    output: BookOutput::class,
-    provider: BookProvider::class,
-    processor: BookProcessor::class,
+    input: BookResourceInput::class,
+    provider: BookResourceManager::class,
+    processor: BookResourceManager::class,
     stateOptions: new Options(Book::class),
 )]
-final class BookOutput
+final class BookResource
 {
     public int $id;
+    public string $author;
     public string $name;
     public string $type = 'output';
 }
