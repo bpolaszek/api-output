@@ -4,7 +4,7 @@ namespace App\State;
 
 use ApiPlatform\Doctrine\Common\State\PersistProcessor;
 use ApiPlatform\Doctrine\Common\State\RemoveProcessor;
-use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\DeleteOperationInterface;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\State\ProcessorInterface;
@@ -31,7 +31,7 @@ final readonly class BookProcessor implements ProcessorInterface
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): BookOutput
     {
         if (is_write_operation($operation)) {
-            return match ($operation instanceof Delete) {
+            return match ($operation instanceof DeleteOperationInterface) {
                 true => $this->handleDelete($data, $operation, $uriVariables, $context),
                 false => $this->handleInsertOrUpdate($data, $operation, $uriVariables, $context),
             };

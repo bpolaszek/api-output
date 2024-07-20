@@ -2,17 +2,22 @@
 
 namespace App;
 
-use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\HttpOperation;
 use ApiPlatform\Metadata\Operation;
-use ApiPlatform\Metadata\Patch;
-use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Put;
+use InvalidArgumentException;
+
+use function in_array;
 
 function is_write_operation(Operation $operation, bool $includeDelete = true): bool
 {
-    $isCreateOperation = $operation instanceof Post;
-    $isUpdateOperation = $operation instanceof Put || $operation instanceof Patch;
-    $isDeleteOperation = $operation instanceof Delete;
+    if (!$operation instanceof HttpOperation) {
+        throw new InvalidArgumentException('This function only supports HTTP operations.');
+    }
+
+    $method = $operation->getMethod();
+    $isCreateOperation = 'POST' === $method;
+    $isUpdateOperation = in_array($method, ['PUT', 'PATCH'], true);
+    $isDeleteOperation = 'DELETE' === $method;
 
     return match ($includeDelete) {
         true => $isCreateOperation || $isUpdateOperation || $isDeleteOperation,
