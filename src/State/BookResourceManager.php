@@ -7,7 +7,7 @@ use ApiPlatform\Doctrine\Common\State\RemoveProcessor;
 use ApiPlatform\Doctrine\Orm\State\CollectionProvider;
 use ApiPlatform\Doctrine\Orm\State\ItemProvider;
 use ApiPlatform\Metadata\CollectionOperationInterface;
-use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\DeleteOperationInterface;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\Pagination\ArrayPaginator;
 use ApiPlatform\State\Pagination\Pagination;
@@ -56,7 +56,7 @@ final readonly class BookResourceManager implements ProviderInterface, Processor
         array $context = [],
     ): ?BookResource {
         if (is_write_operation($operation)) {
-            return match ($operation instanceof Delete) {
+            return match ($operation instanceof DeleteOperationInterface) {
                 true => $this->handleDelete($data, $operation, $uriVariables, $context),
                 false => $this->handleInsertOrUpdate($data, $operation, $uriVariables, $context),
             };
